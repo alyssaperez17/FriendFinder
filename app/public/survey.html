@@ -27,6 +27,8 @@
 
         <h5>About You</h5>
 
+        <br>
+
         <h5>Name</h5>
         <input type="text" name="" id="name" class="form-control" required>
 
@@ -37,7 +39,7 @@
 
         <h5>Question 1</h5>
 
-        <h5>You prefer ramon over pho.</h5>
+        <h6>You prefer ramon over pho.</h6>
         <select data-placeholder="" class="chosen-select" id="q1">
             <option value="1"></option>
             <option value="1">1 (Strongly disagree)</option>
@@ -54,7 +56,7 @@
         <br>
 
         <h5>Question 2</h5>
-        <h5>You would rather play Nintendo over Xbox.</h5>
+        <h6>You would rather play Nintendo over Xbox.</h6>
         <select data-placeholder="" class="chosen-select" id="q2">
             <option value="1"></option>
             <option value="1">1 (Strongly disagree)</option>
@@ -72,7 +74,7 @@
 
 
         <h5>Question 3</h5>
-        <h5>Do you even lift?</h5>
+        <h6>Do you even lift?</h6>
         <select data-placeholder="" class="chosen-select" id="q3">
             <option value="1"></option>
             <option value="1">1 (Strongly disagree)</option>
@@ -90,7 +92,7 @@
 
 
         <h5>Question 4</h5>
-        <h5>Beer is so much better than wine.</h5>
+        <h6>Beer is so much better than wine.</h6>
         <select data-placeholder="" class="chosen-select" id="q4">
             <option value="1"></option>
             <option value="1">1 (Strongly disagree)</option>
@@ -107,7 +109,7 @@
         <br>
 
         <h5>Question 5</h5>
-        <h5>You prefer spontanious adventures than planned out ones.</h5>
+        <h6>You prefer spontanious adventures than planned out ones.</h6>
         <select data-placeholder="" class="chosen-select" id="q5">
             <option value="1"></option>
             <option value="1">1 (Strongly disagree)</option>
@@ -126,7 +128,7 @@
 
 
         <h5>Question 6</h5>
-        <h5>The Dallas Cowboys are your team.</h5>
+        <h6>The Dallas Cowboys are your team.</h6>
         <select data-placeholder="" class="chosen-select" id="q6">
             <option value="1"></option>
             <option value="1">1 (Strongly disagree)</option>
@@ -144,7 +146,7 @@
         <br>
 
         <h5>Question 7</h5>
-        <h5>Spicy food is a must.</h5>
+        <h6>Spicy food is a must.</h6>
         <select data-placeholder="" class="chosen-select" id="q7">
             <option value="1"></option>
             <option value="1">1 (Strongly disagree)</option>
@@ -161,7 +163,7 @@
         <br>
 
         <h5>Question 8</h5>
-        <h5>Family is important.</h5>
+        <h6>Family is important.</h6>
         <select data-placeholder="" class="chosen-select" id="q8">
             <option value="1"></option>
             <option value="1">1 (Strongly disagree)</option>
@@ -178,7 +180,7 @@
         <br>
 
         <h5>Question 9</h5>
-        <h5>You are a dog lover.</h5>
+        <h6>You are a dog lover.</h6>
         <select data-placeholder="" class="chosen-select" id="q9">
             <option value="1"></option>
             <option value="1">1 (Strongly disagree)</option>
@@ -195,7 +197,7 @@
         <br>
 
         <h5>Question 10</h5>
-        <h5>You can code like a pro.</h5>
+        <h6>You can code like a pro.</h6>
         <select data-placeholder="" class="chosen-select" id="q10">
             <option value="1"></option>
             <option value="1">1 (Strongly disagree)</option>
@@ -226,8 +228,15 @@
             </div>
             <div class="modal-body">
                 <h5 id="bestFriend"></h5>
+                <img id="bestfriendPic" src="#">
+
 
             </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+
+            </div>
+
         </div>
 
     </div>
@@ -239,3 +248,48 @@
 </body>
 
 </html>
+
+<script type="text/javascript">
+	$("#submitBtn").on("click", function(event) {
+		event.preventDefault();
+		
+		var valid = true;
+		if($("#name").val() === "" || $("#photo").val() === "") {
+			valid = false;
+        } 
+        
+        else if($("#q1").val() === "empty" || $("#q2").val() === "empty" || $("#q3").val() === "empty" || $("#q4").val() === "empty" || $("#q5").val() === "empty" || $("#q6").val() === "empty" || $("#q7").val() === "empty" || $("#q8").val() === "empty" || $("#q9").val() === "empty" || $("#q10").val() === "empty") {
+			valid = false;
+		}
+		if(valid === true) {
+			var newUser = {
+				name: $("#name").val().trim(),
+				photo: $("#photo").val().trim(),
+				scores: [
+					$("#q1").val(),
+					$("#q2").val(),
+					$("#q3").val(),
+					$("#q4").val(),
+					$("#q5").val(),
+					$("#q6").val(),
+					$("#q7").val(),
+					$("#q8").val(),
+					$("#q9").val(),
+					$("#q10").val()
+				]
+			};
+			var currentURL = window.location.origin;
+			
+			$.post(currentURL + "/api/friends", newUser, function(data) {
+				$("#bestFriend").text(data.name);
+				$("#bestFriendPic").attr("src", data.photo);
+				$("#bestFriend").modal("toggle");
+			});
+        } 
+        
+        else {
+			
+			alert("This is completed!");
+		}
+	});
+</script>
