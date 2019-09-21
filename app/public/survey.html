@@ -6,14 +6,15 @@
     <title>Friends Finder </title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
         integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
-    <script src="https://code.jquery.com/jquery.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
         integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
         crossorigin="anonymous"></script>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.0/css/materialize.min.css">
+    <script
+  src="https://code.jquery.com/jquery-3.4.1.min.js"
+  integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+  crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.0/js/materialize.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="style.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
@@ -33,7 +34,7 @@
         <input type="text" name="" id="name" class="form-control" required>
 
         <h5>Your photo here</h5>
-        <input type="text" name="" id="photo" class="form-control" required>
+        <input type="text" name="" id="photo" class="form-control">
 
         <br>
 
@@ -240,8 +241,7 @@
         </div>
 
     </div>
-    <script src="https://code.jquery.com/jquery-3.2.1.min.js"
-        integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
 
@@ -251,45 +251,51 @@
 
 <script type="text/javascript">
 	$("#submitBtn").on("click", function(event) {
-		event.preventDefault();
-		
-		var valid = true;
-		if($("#name").val() === "" || $("#photo").val() === "") {
-			valid = false;
-        } 
-        
-        else if($("#q1").val() === "empty" || $("#q2").val() === "empty" || $("#q3").val() === "empty" || $("#q4").val() === "empty" || $("#q5").val() === "empty" || $("#q6").val() === "empty" || $("#q7").val() === "empty" || $("#q8").val() === "empty" || $("#q9").val() === "empty" || $("#q10").val() === "empty") {
-			valid = false;
-		}
-		if(valid === true) {
-			var newUser = {
-				name: $("#name").val().trim(),
-				photo: $("#photo").val().trim(),
-				scores: [
-					$("#q1").val(),
-					$("#q2").val(),
-					$("#q3").val(),
-					$("#q4").val(),
-					$("#q5").val(),
-					$("#q6").val(),
-					$("#q7").val(),
-					$("#q8").val(),
-					$("#q9").val(),
-					$("#q10").val()
-				]
-			};
-			var currentURL = window.location.origin;
-			
-			$.post(currentURL + "/api/friends", newUser, function(data) {
-				$("#bestFriend").text(data.name);
-				$("#bestFriendPic").attr("src", data.photo);
-				$("#bestFriend").modal("toggle");
-			});
-        } 
-        
-        else {
-			
-			alert("This is completed!");
-		}
-	});
-</script>
+     event.preventDefault();
+     // Form validation
+     function validateForm() {
+       var isValid = true;
+       $(".form-control").each(function() {
+         if ($(this).val() === "") {
+           isValid = false;
+         }
+       });
+       $(".chosen-select").each(function() {
+         if ($(this).val() === "") {
+           isValid = false;
+         }
+       });
+       return isValid;
+     }
+     // If all required fields are filled
+     if (validateForm()) {
+       // Create an object for the user"s data  
+       var userData = {
+         name: $("#name").val(),
+         photo: $("#photo").val(),
+         scores: [
+           $("#q1").val(),
+           $("#q2").val(),
+           $("#q3").val(),
+           $("#q4").val(),
+           $("#q5").val(),
+           $("#q6").val(),
+           $("#q7").val(),
+           $("#q8").val(),
+           $("#q9").val(),
+           $("#q10").val()
+         ]
+       };
+       // AJAX post the data to the friends API.
+       $.post("./data/friends", userData, function(data) {
+         // Grab the result from the AJAX post so that the best match's name and photo are displayed.
+         $("#name").text(data.name);
+         $("#photo").attr("src", data.photo);
+         // Show the modal with the best match
+         $("#results-modal").modal("toggle");
+       });
+     } else {
+       alert("Please fill out all fields before submitting!");
+     }
+   });
+ </script>
